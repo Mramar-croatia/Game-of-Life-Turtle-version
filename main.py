@@ -1,28 +1,60 @@
-import turtle
-import pygame
+from turtle import Screen
 
-# Initialize pygame for music
-pygame.mixer.init()
-pygame.mixer.music.load("Katyusha.mp3")
-pygame.mixer.music.play(-1)  # Loop the music indefinitely
+from const import *
 
-# Create a screen instance
-screen = turtle.Screen()
+import grid
+from music import MusicPlayer
+from grid import GridDrawer
+from life import Life
 
-# Set the screen to fullscreen mode
-screen.bgcolor("yellow")             # Set background color (optional)
-screen.title("Turtle Graphics")     # Set title of the window (optional)
-screen.cv._rootwindow.attributes('-fullscreen', True)  # Enable fullscreen mode
+# Set up the screen
+screen=Screen()
+screen.bgcolor("white")
+screen.title("Game of life")
+screen.cv._rootwindow.attributes('-fullscreen', True)
+screen.tracer(0)
 
-# You can create a turtle to draw
-t = turtle.Turtle()
-t.speed(0)
-t.hideturtle()
+# Get the size of the screen
+root = screen._root  # This gets the tkinter root window used by Turtle
+x_max = root.winfo_screenwidth() * 0.48  # Full screen width
+y_max = root.winfo_screenheight() * 0.48 # Full screen height
 
-t.penup()
-t.goto(0, 0)
-t.color("dark red")
-t.write("COMMUNIST TANK", align="center", font=("Arial", 75, "bold"))
+# Create a music player object
+music_player = MusicPlayer()
+screen.listen()
 
-# Keep the window open
+# Create a grid object, determine the number of squares in the grid
+n = int((x_max*2)//SQUARE_SIZE) # po x
+m = int((y_max*2)//SQUARE_SIZE) # po y
+
+grid_drawer = GridDrawer(n, m, x_max, y_max)
+grid_drawer.draw_grid()
+grid = grid_drawer.generate_grid(is_random=True)
+
+life_drawer = Life(n, m, x_max, y_max, grid, screen, music_player)
+life_drawer.draw_all_life()
+life_drawer.update_life()
+
+
+screen.onkeypress(screen.bye, "q")
+screen.onkeypress(screen.bye, "Escape")
+
+screen.onkeypress(life_drawer.update_life, "Right")
+screen.onkeypress(life_drawer.update_life, "Return")
+
+screen.onkeypress(life_drawer.increase_speed, "plus")
+screen.onkeypress(life_drawer.decrease_speed, "minus")
+
+def reset_life():
+	life_drawer.life = [[0 for i in range(m)] for j in range(n)]
+screen.onkeypress(reset_life, "r")
+
+def get_cell_from_click(x, y):
+    col = int(x / SQUARE_SIZE + x_max // SQUARE_SIZE)
+    row = int(y / SQUARE_SIZE + y_max // SQUARE_SIZE)
+    if col < n and row < m:
+        life_drawer.life[col][row] = 1 - life_drawer.life[col][row]
+        life_drawer.draw_all_life()
+screen.onclick(get_cell_from_click)
+
 screen.mainloop()
