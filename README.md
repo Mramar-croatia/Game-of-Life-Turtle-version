@@ -27,3 +27,6 @@ There are certain commands that can be used once the program starts:
 "-" - decrease speed
 "->" - next turn
 "r" - reset all
+
+
+By tweaking the constants in const.py file you can further change the way game works.

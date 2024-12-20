@@ -9,8 +9,8 @@ from life import Life
 
 # Set up the screen
 screen=Screen()
-screen.bgcolor("white")
-screen.title("Game of life")
+screen.bgcolor(BACKGROUND_COLOR)
+screen.title("Game of Life")
 screen.cv._rootwindow.attributes('-fullscreen', True)
 screen.tracer(0)
 

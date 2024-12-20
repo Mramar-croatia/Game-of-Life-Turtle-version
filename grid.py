@@ -1,5 +1,6 @@
 from turtle import Turtle
 import random
+from const import *
 
 class GridDrawer(Turtle):
     
@@ -43,7 +44,7 @@ class GridDrawer(Turtle):
         if is_random:
             for i in range(self.n):
                 for j in range(self.m):
-                    if random.randint(0,7) == 0:
+                    if random.randint(0,CHANCE) == 0:
                         grid[i][j] = 1
         
         return grid
