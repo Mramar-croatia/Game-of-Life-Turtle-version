@@ -1,11 +1,15 @@
-from token import STAR
-from turtle import Turtle
+from turtle import Turtle, Screen
 from const import *
 import copy
+from music import MusicPlayer
 
 class Life(Turtle):
+    '''
+    Class for managing "life" in the game of life. It updates the life and draws it on the screen.
+    '''
     
-    def __init__(self, n, m, x_max, y_max, grid, screen, music_player):
+    def __init__(self, n: int, m: int, x_max: int, y_max: int, grid: list[list[int]], screen: Screen, music_player: MusicPlayer):
+        
         super().__init__()
         self.up()
         self.hideturtle()
@@ -21,15 +25,16 @@ class Life(Turtle):
         self.music_player = music_player
         
         self.paused = START_PAUSED
-        
         self.update_speed = 20
         
+        # Set up the keybinds
         self.screen.onkey(self.pause, "p")
         self.screen.onkey(self.unpause, "u")
         self.screen.onkey(self.change_state, "space")
 
 
-    def draw_square(self, x, y, size, color = 'black'):
+    # Function to color a single square at a given position
+    def draw_square(self, x: float, y: float, size: int, color: str = 'black'):
         
         self.up()
         self.color(color)
@@ -46,6 +51,7 @@ class Life(Turtle):
         self.end_fill()
         
 
+    # Function to draw a single life cell at a given position
     def draw_life(self, x, y):
         
         lx = self.x_max*2/self.n*x - self.x_max
@@ -54,6 +60,7 @@ class Life(Turtle):
         self.draw_square(lx+1,ly+1,SQUARE_SIZE)
 
 
+    # Function to draw all life cells on the screen
     def draw_all_life(self):
         
         for i in range(self.n):
@@ -61,6 +68,7 @@ class Life(Turtle):
                 if self.life[i][j] == 1: self.draw_life(i,j)
 
 
+    # Function to count the number of neighbors of a cell
     def num_neighbors(self, x, y):
         sum = 0
         
@@ -71,6 +79,7 @@ class Life(Turtle):
         return sum - self.life[x][y]
     
     
+    # Functions to pause and unpause the game
     def pause(self):
         self.paused = True
         self.music_player.pause()
@@ -83,7 +92,8 @@ class Life(Turtle):
             self.unpause()
         else:
             self.pause()
-            
+           
+    # Functions to update the speed of the game     
     def decrease_speed(self):
         self.update_speed += 10
         
@@ -104,6 +114,7 @@ class Life(Turtle):
         self.write(self.update_speed, font=("Arial", 42, "normal"))
         self.color('black')
             
+    # Update all life cells        
     def update_life(self):
         
         newlife = copy.deepcopy(self.life)

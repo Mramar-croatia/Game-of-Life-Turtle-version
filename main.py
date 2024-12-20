@@ -1,8 +1,5 @@
 from turtle import Screen
-
 from const import *
-
-import grid
 from music import MusicPlayer
 from grid import GridDrawer
 from life import Life
@@ -21,20 +18,24 @@ y_max = root.winfo_screenheight() * 0.48 # Full screen height
 
 # Create a music player object
 music_player = MusicPlayer()
-screen.listen()
 
 # Create a grid object, determine the number of squares in the grid
-n = int((x_max*2)//SQUARE_SIZE) # po x
-m = int((y_max*2)//SQUARE_SIZE) # po y
+n = int((x_max*2)//SQUARE_SIZE) # on the x-axis
+m = int((y_max*2)//SQUARE_SIZE) # on the y-axis
 
+# Draw the grid and generate the starting grid
 grid_drawer = GridDrawer(n, m, x_max, y_max)
 grid_drawer.draw_grid()
 grid = grid_drawer.generate_grid(is_random=True)
 
+# Create a life drawer object
 life_drawer = Life(n, m, x_max, y_max, grid, screen, music_player)
 life_drawer.draw_all_life()
 life_drawer.update_life()
 
+
+# Set up the screen keybindings
+screen.listen()
 
 screen.onkeypress(screen.bye, "q")
 screen.onkeypress(screen.bye, "Escape")
